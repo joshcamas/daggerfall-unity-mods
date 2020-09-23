@@ -1,0 +1,67 @@
+{
+    "Version": null,
+    "Sections": [
+        {
+            "Name": "settings",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Min": 0.0,
+                    "Max": 20.0,
+                    "Value": 0.0,
+                    "Name": "shakeAmountAdd",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+                {
+                    "Min": 0.0,
+                    "Max": 20.0,
+                    "Value": 10.0,
+                    "Name": "shakeAmountMultiplier",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+                {
+                    "Min": 0.1,
+                    "Max": 30.0,
+                    "Value": 10.0,
+                    "Name": "maxShake",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+                {
+                    "Min": 0.1,
+                    "Max": 30.0,
+                    "Value": 10.0,
+                    "Name": "roughness",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+                {
+                    "Min": 0.05,
+                    "Max": 3.0,
+                    "Value": 0.3,
+                    "Name": "fadeInTime",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+                {
+                    "Min": 0.05,
+                    "Max": 3.0,
+                    "Value": 0.5,
+                    "Name": "fadeOutTime",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                }
+            ],
+            "$version": "v1"
+        }
+    ]
+}

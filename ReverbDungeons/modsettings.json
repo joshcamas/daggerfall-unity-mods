@@ -1,0 +1,25 @@
+{
+    "Version": null,
+    "Sections": [
+        {
+            "Name": "settings",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Options": [
+                        "Low",
+                        "Medium",
+                        "High"
+                    ],
+                    "Value": 1,
+                    "Name": "level",
+                    "Description": null,
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                }
+            ],
+            "$version": "v1"
+        }
+    ]
+}
