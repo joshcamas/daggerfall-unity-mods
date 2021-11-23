@@ -17,9 +17,7 @@ namespace SpellcastStudios.BetterFootsteps
 
         private float armorSoundVolume;
         private float footstepSoundVolume;
-        private bool appliedSettings = false;
-
-        private bool wasInDungeon;
+        private bool enableCustomFootsteps;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -33,6 +31,10 @@ namespace SpellcastStudios.BetterFootsteps
 
         private void Start()
         {
+            //Heck hack
+            if (!mod.GetSettings().GetValue<bool>("Better Footsteps", "enable"))
+                return;
+
             DisableBuiltInFootsteps();
 
             if (footstepsComponent == null)
@@ -44,20 +46,8 @@ namespace SpellcastStudios.BetterFootsteps
 
             LoadSettings(mod.GetSettings());
 
-            GameManager.OnEnemySpawn += OnEnemySpawn;
-            PopulationManager.OnMobileNPCEnable += OnMobileNPCEnable;
             //GameManager.OnEncounter += UpdateEnemyFootsteps;
             //PlayerEnterExit.OnTransitionDungeonInterior += OnTransitionDungeonInterior;
-        }
-
-        private void OnMobileNPCEnable(PopulationManager.PoolItem item)
-        {
-            item.npc.gameObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        }
-
-        private void OnEnemySpawn(GameObject enemy)
-        {
-            enemy.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         }
 
         private void OnTransitionDungeonInterior(PlayerEnterExit.TransitionEventArgs args)
@@ -89,6 +79,8 @@ namespace SpellcastStudios.BetterFootsteps
 
         private void LoadSettings(ModSettings settings)
         {
+            enableCustomFootsteps = settings.GetValue<bool>("Better Footsteps", "enable");
+
             armorSoundVolume = settings.GetValue<float>("Better Footsteps", "armorVolume");
             footstepSoundVolume = settings.GetValue<float>("Better Footsteps", "footstepVolume");
 

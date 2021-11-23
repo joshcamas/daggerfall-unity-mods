@@ -29,57 +29,41 @@ namespace SpellcastStudios.CameraShake
 
         private void Start()
         {
-            StartGameBehaviour.OnStartGame += OnStartGame;
-            SaveLoadManager.OnLoad += OnLoad;
-
             mod.IsReady = true;
+
+            SetUpPlayer();
+            LoadSettings(mod.GetSettings());
         }
 
         private void LoadSettings(ModSettings settings)
         {
-            if(damageShaker != null)
-            {
-                damageShaker.fadeInTime = settings.GetValue<float>("Camera Shake", "fadeInTime");
-                damageShaker.fadeOutTime = settings.GetValue<float>("Camera Shake", "fadeOutTime");
-                damageShaker.maxShake = settings.GetValue<float>("Camera Shake", "maxShake");
-                damageShaker.roughness = settings.GetValue<float>("Camera Shake", "roughness");
-                damageShaker.shakeAmountAdd = settings.GetValue<float>("Camera Shake", "shakeAmountAdd");
-                damageShaker.shakeAmountMultiplier = settings.GetValue<float>("Camera Shake", "shakeAmountMultiplier");
-            }
-        }
-
-        private void OnLoad(SaveData_v1 saveData)
-        {
-            SetUpPlayer();
-        }
-
-        private void OnStartGame(object sender, EventArgs e)
-        {
-            SetUpPlayer();
+            damageShaker.fadeInTime = settings.GetValue<float>("Camera Shake", "fadeInTime");
+            damageShaker.fadeOutTime = settings.GetValue<float>("Camera Shake", "fadeOutTime");
+            damageShaker.maxShake = settings.GetValue<float>("Camera Shake", "maxShake");
+            damageShaker.roughness = settings.GetValue<float>("Camera Shake", "roughness");
+            damageShaker.shakeAmountAdd = settings.GetValue<float>("Camera Shake", "shakeAmountAdd");
+            damageShaker.shakeAmountMultiplier = settings.GetValue<float>("Camera Shake", "shakeAmountMultiplier");
         }
 
         private void SetUpPlayer()
         {
-            if (!GameManager.Instance.MainCamera.transform.parent.GetComponent<CameraShaker>())
-            {
-                //Inject a new object between the "smooth follow" object and the camera.
-                GameObject shakeObject = new GameObject();
-                shakeObject.name = "Shaker";
-                shakeObject.transform.parent = GameManager.Instance.MainCamera.transform.parent;
-                shakeObject.transform.localPosition = Vector3.zero;
-                shakeObject.transform.localRotation = Quaternion.identity;
+            //Inject a new object between the "smooth follow" object and the camera.
+            GameObject shakeObject = new GameObject();
+            shakeObject.name = "Shaker";
+            shakeObject.transform.parent = GameManager.Instance.MainCamera.transform.parent;
+            shakeObject.transform.localPosition = Vector3.zero;
+            shakeObject.transform.localRotation = Quaternion.identity;
 
-                cameraShaker = shakeObject.AddComponent<CameraShaker>();
+            //Set as first sibling, since some mods (IE Improved interior lighting) require nothing to change in hiearchy
+            shakeObject.transform.SetAsFirstSibling();
 
-                GameManager.Instance.MainCamera.transform.parent = shakeObject.transform;
-            }
+            cameraShaker = shakeObject.AddComponent<CameraShaker>();
 
-            if (!GameManager.Instance.PlayerObject.GetComponent<DamageShaker>())
-                damageShaker = GameManager.Instance.PlayerObject.gameObject.AddComponent<DamageShaker>();
+            GameManager.Instance.MainCamera.transform.parent = shakeObject.transform;
 
+            damageShaker = GameManager.Instance.PlayerObject.gameObject.AddComponent<DamageShaker>();
             damageShaker.SetPlayer(GameManager.Instance.PlayerEntity, cameraShaker);
 
-            LoadSettings(mod.GetSettings());
         }
     }
 }

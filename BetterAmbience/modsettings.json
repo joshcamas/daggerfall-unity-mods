@@ -7,6 +7,13 @@
             "IsAdvanced": false,
             "Keys": [
                 {
+                    "Value": true,
+                    "Name": "enable",
+                    "Description": "Enables better footsteps module",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
                     "Min": 0.0,
                     "Max": 2.0,
                     "Value": 1.0,
@@ -184,7 +191,7 @@
                 {
                     "Min": 0.0,
                     "Max": 1.0,
-                    "Value": .2,
+                    "Value": 0.2,
                     "Name": "fogAmbientEffect",
                     "Description": "How much the random dungeon color affects dungeon lighting",
                     "$version": "v1",

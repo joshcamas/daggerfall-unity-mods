@@ -7,6 +7,7 @@ using System.Collections;
 using UnityEngine.PostProcessing;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop;
+using DaggerfallWorkshop.Game.Serialization;
 
 namespace SpellcastStudios.FoggyDungeons
 {
@@ -48,6 +49,7 @@ namespace SpellcastStudios.FoggyDungeons
             StartGameBehaviour.OnStartGame += OnStartGame;
             PlayerEnterExit.OnTransitionDungeonInterior += OnEnterDungeon;
             PlayerEnterExit.OnTransitionDungeonExterior += OnExitDungeon;
+            SaveLoadManager.OnLoad += OnLoad;
         }
 
         private void LoadSettings(ModSettings settings)
@@ -80,6 +82,12 @@ namespace SpellcastStudios.FoggyDungeons
         {
             StartCoroutine(UpdateDungeonFog());
         }
+
+        private void OnLoad(SaveData_v1 saveData)
+        {
+            StartCoroutine(UpdateDungeonFog());
+        }
+
 
         private void DisableDungeonFog()
         {
