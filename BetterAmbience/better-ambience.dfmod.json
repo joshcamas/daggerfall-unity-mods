@@ -1,8 +1,8 @@
 {
     "ModTitle": "Better Ambience",
-    "ModVersion": "0.1.2",
+    "ModVersion": "0.1.3",
     "ModAuthor": "Joshua Steinhauer",
-    "DFUnity_Version": "0.10.25",
+    "DFUnity_Version": "0.13.2",
     "ModDescription": "Adds camera shaking, better footsteps, and dungeon fog + reverb",
     "GUID": "d5655077-ba38-4dbc-a41f-2b358cb1d680",
     "Files": [
