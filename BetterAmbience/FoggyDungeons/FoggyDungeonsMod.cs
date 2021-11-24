@@ -4,9 +4,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility;
 using System;
 using System.Collections;
-using UnityEngine.PostProcessing;
+using UnityEngine.Rendering.PostProcessing;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop;
+using DaggerfallWorkshop.Game.Serialization;
 
 namespace SpellcastStudios.FoggyDungeons
 {
@@ -27,7 +28,8 @@ namespace SpellcastStudios.FoggyDungeons
         public bool totalRandom = false;
 
         private static Mod mod;
-        private PostProcessingBehaviour postProcessingBehaviour;
+        private PostProcessLayer postProcessLayer;
+        private PostProcessVolume postProcessVolume;
         private PlayerAmbientLight playerAmbientLight;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
@@ -42,12 +44,14 @@ namespace SpellcastStudios.FoggyDungeons
 
         private void Start()
         {
-            postProcessingBehaviour = Camera.main.GetComponent<PostProcessingBehaviour>();
+            postProcessLayer = GameManager.Instance.MainCamera.GetComponent<PostProcessLayer>();
+            postProcessVolume = GameManager.Instance.PostProcessVolume;
             playerAmbientLight = GameManager.Instance.PlayerObject.GetComponent<PlayerAmbientLight>();
 
             StartGameBehaviour.OnStartGame += OnStartGame;
             PlayerEnterExit.OnTransitionDungeonInterior += OnEnterDungeon;
             PlayerEnterExit.OnTransitionDungeonExterior += OnExitDungeon;
+            SaveLoadManager.OnLoad += OnLoad;
         }
 
         private void LoadSettings(ModSettings settings)
@@ -81,13 +85,31 @@ namespace SpellcastStudios.FoggyDungeons
             StartCoroutine(UpdateDungeonFog());
         }
 
+        private void OnLoad(SaveData_v1 saveData)
+        {
+            StartCoroutine(UpdateDungeonFog());
+        }
+
+
         private void DisableDungeonFog()
         {
             if(enableAO)
-                postProcessingBehaviour.profile.ambientOcclusion.enabled = false;
+            {
+                AmbientOcclusion ambientOcclusionSettings;
+                if (postProcessVolume.profile.TryGetSettings(out ambientOcclusionSettings))
+                {
+                    ambientOcclusionSettings.enabled.value = false;
+                }
+            }
 
             if (enableVignette)
-                postProcessingBehaviour.profile.vignette.enabled = false;
+            {
+                Vignette vignetteSettings;
+                if (postProcessVolume.profile.TryGetSettings(out vignetteSettings))
+                {
+                    vignetteSettings.enabled.value = false;
+                }
+            }
 
             if (enableAmbientLighting && playerAmbientLight != null)
             {
@@ -120,28 +142,30 @@ namespace SpellcastStudios.FoggyDungeons
 
             }
 
-            if (postProcessingBehaviour != null)
+            if (postProcessLayer != null)
             {
-                var fogPostProcess = postProcessingBehaviour.profile.fog.settings;
-                fogPostProcess.excludeSkybox = true;
-                postProcessingBehaviour.profile.fog.settings = fogPostProcess;
+                postProcessLayer.fog.excludeSkybox = true;
             }
 
             if (enableAO)
             {
-                var ambientOcclusion = postProcessingBehaviour.profile.ambientOcclusion.settings;
-                ambientOcclusion.intensity = 0.65f;
-                ambientOcclusion.radius = 1.64f;
-                postProcessingBehaviour.profile.ambientOcclusion.settings = ambientOcclusion;
-                postProcessingBehaviour.profile.ambientOcclusion.enabled = true;
+                AmbientOcclusion ambientOcclusionSettings;
+                if (postProcessVolume.profile.TryGetSettings(out ambientOcclusionSettings))
+                {
+                    ambientOcclusionSettings.intensity.value = 0.65f;
+                    ambientOcclusionSettings.radius.value = 1.64f;
+                    ambientOcclusionSettings.enabled.value = true;
+                }
             }
 
             if (enableVignette)
             {
-                var vignette = postProcessingBehaviour.profile.vignette.settings;
-                vignette.intensity = 0.273f;
-                postProcessingBehaviour.profile.vignette.settings = vignette;
-                postProcessingBehaviour.profile.vignette.enabled = true;
+                Vignette vignetteSettings;
+                if (postProcessVolume.profile.TryGetSettings(out vignetteSettings))
+                {
+                    vignetteSettings.intensity.value = 0.273f;
+                    vignetteSettings.enabled.value = true;
+                }
             }
 
             if(enableAmbientLighting)

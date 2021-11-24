@@ -35,7 +35,7 @@ namespace SpellcastStudios.BetterFootsteps
         bool ignoreLostGrounding = true;
 
         SoundList currentFootstepSoundList = null;
-        
+
 
         DaggerfallDateTime.Seasons currentSeason = DaggerfallDateTime.Seasons.Summer;
         int currentClimateIndex;
@@ -46,7 +46,7 @@ namespace SpellcastStudios.BetterFootsteps
 
         protected virtual void Start()
         {
-               // Store references
+            // Store references
             dfUnity = DaggerfallUnity.Instance;
             dfAudioSource = GetComponent<DaggerfallAudioSource>();
             playerEnterExit = GetComponent<PlayerEnterExit>();
@@ -70,8 +70,10 @@ namespace SpellcastStudios.BetterFootsteps
             currentFootstepSoundList = FootstepSoundDungeon;
         }
 
-        void FixedUpdate()
+        protected virtual void Update()
         {
+            if (!FootstepsEnabled())
+                return;
 
             //this condition helps prevent making a nuisance footstep noise when the player first
             //loads a save, or into an interior or exterior location
@@ -228,7 +230,7 @@ namespace SpellcastStudios.BetterFootsteps
             if (currentFootstepSoundList == null)
                 return;
 
-            currentFootstepSoundList.PlayRandomClip(dfAudioSource,customAudioSource, volume);
+            currentFootstepSoundList.PlayRandomClip(dfAudioSource, customAudioSource, volume);
 
             if (currentFootstepSoundList != this.FootstepSoundSubmerged && HasArmor())
             {
@@ -239,6 +241,11 @@ namespace SpellcastStudios.BetterFootsteps
         private Vector3 GetHorizontalPosition()
         {
             return new Vector3(transform.position.x, 0, transform.position.z);
+        }
+
+        protected virtual bool FootstepsEnabled()
+        {
+            return true;
         }
 
         protected virtual bool HasArmor()

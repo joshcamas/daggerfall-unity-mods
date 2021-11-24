@@ -4,6 +4,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
 
 namespace SpellcastStudios.BetterFootsteps
 {
@@ -11,10 +12,40 @@ namespace SpellcastStudios.BetterFootsteps
     {
         PlayerMotor playerMotor;
 
+        private bool disableFootsteps;
+        private float lastTravelOptionsCheckTime;
         protected override void Start()
         {
             playerMotor = GetComponent<PlayerMotor>();
+
             base.Start();
+        }
+
+        protected override void Update()
+        {
+            //Check for travel options change
+            if (Time.time > lastTravelOptionsCheckTime + 0.5f)
+            {
+                ModManager.Instance.SendModMessage("TravelOptions", "isTravelActive", null, (msg, data) =>
+                {
+                    disableFootsteps = (bool)data;
+                });
+
+                lastTravelOptionsCheckTime = Time.time;
+            }
+
+            base.Update();
+        }
+
+        private void TravelOptionsActiveCallback(string message, object data)
+        {
+            Debug.Log("TRAVEL ACTIVE " + (bool)data);
+            disableFootsteps = (bool)data;
+        }
+
+        protected override bool FootstepsEnabled()
+        {
+            return !disableFootsteps;
         }
 
         protected override bool IsOnExteriorWater()
